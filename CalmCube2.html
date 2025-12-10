@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmCube - 珠宝盲盒品牌</title>
+    <style>
+        /* 基础样式 */
+        :root {
+            --primary-color: #d4afb9; /* 柔和的粉紫色 */
+            --secondary-color: #9cadce; /* 淡蓝色 */
+            --accent-color: #7ec4cf; /* 青蓝色 */
+            --dark-color: #3a405a; /* 深蓝色 */
+            --light-color: #f9f6f2; /* 浅米色 */
+            --text-color: #333333; /* 主要文字颜色 */
+            --text-light: #666666; /* 次要文字颜色 */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* 头部导航 */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            height: 30px;
+            width: auto;
+            margin-right: 30px;
+            /* 临时样式 - 实际使用时删除 */
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            position: relative;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 下拉菜单样式 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu li {
+            margin: 0;
+            width: 100%;
+        }
+        
+        .dropdown-menu a {
+            padding: 12px 20px;
+            display: block;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .nav-icons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-icons a {
+            margin-left: 20px;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+        
+        /* Hero区域 */
+        .hero {
+            background: linear-gradient(135deg, var(--light-color) 0%, #e8e2db 100%);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background-color: var(--secondary-color);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background-color: var(--accent-color);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px; /* 减少间距 */
+            color: var(--dark-color);
+            line-height: 1.2; /* 调整行高 */
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            line-height: 1.5; /* 调整行高 */
+        }
+        
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        /* 产品展示区 */
+        .products {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 250px;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .product-img::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            opacity: 0.1;
+            border-radius: 20px;
+            transform: rotate(45deg);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-info p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 18px;
+        }
+        
+        /* 品牌故事 */
+        .story {
+            padding: 80px 0;
+            background-color: var(--light-color);
+        }
+        
+        .story-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .story-text {
+            flex: 1;
+        }
+        
+        .story-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+        
+        .story-text p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        .story-image {
+            flex: 1;
+            height: 400px;
+            background-color: var(--secondary-color);
+            opacity: 0.2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 博客部分 */
+        .blog {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .blog-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .blog-img {
+            height: 200px;
+            background-color: var(--light-color);
+        }
+        
+        .blog-info {
+            padding: 20px;
+        }
+        
+        .blog-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .blog-info p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .read-more {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 0 10px 10px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .story-content {
+                flex-direction: column;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <!-- Logo图片 -->
+                    <img src="CalmCubeLogo.png"alt="CalmCube Logo" class="logo-img" style="max-width: 24px; height: auto;">
+                    Calm<span>Cube</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#">首页</a></li>
+                    <li class="dropdown">
+                        <a href="#">盲盒系列 <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">静立方系列</a></li>
+                            <li><a href="#">谧境流光系列</a></li>
+                            <li><a href="#">星辰入梦系列</a></li>
+                            <li><a href="#">大地呼吸系列</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">品牌故事</a></li>
+                    <li class="dropdown">
+                        <a href="#">社区 <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">用户分享</a></li>
+                            <li><a href="#">开箱视频</a></li>
+                            <li><a href="#">搭配指南</a></li>
+                            <li><a href="#">活动专区</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">博客</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="#"><i class="fas fa-search"></i></a>
+                    <a href="#"><i class="fas fa-user"></i></a>
+                    <a href="#"><i class="fas fa-shopping-bag"></i></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>开启属于你的宁静惊喜</h1>
+                <p>CalmCube珠宝盲盒，融合极简美学与神秘惊喜，每一件都是精心设计的艺术品，等待您来发现。</p>
+                <div class="hero-btns">
+                    <a href="#" class="btn">立即探索</a>
+                    <a href="#" class="btn btn-outline">了解品牌</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品展示区 -->
+    <section class="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>精选盲盒系列</h2>
+                <p>探索我们精心设计的珠宝盲盒系列，每一款都融合了宁静美学与惊喜元素</p>
+            </div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-img">
+                        <!-- 这里实际使用时替换为产品图片 -->
+                        <span>产品图片</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>静立方系列</h3>
+                        <p>极简几何设计，纯净银饰，带来内心宁静</p>
+                        <div class="product-price">¥88</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <span>产品图片</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>AAA系列</h3>
+                        <p>磨砂材质的温柔光泽，如静谧月光</p>
+                        <div class="product-price">¥88</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <span>产品图片</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>BBB系列</h3>
+                        <p>闪烁锆石点缀，如同夜空中的点点星光</p>
+                        <div class="product-price">¥88</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <span>产品图片</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>CCC系列</h3>
+                        <p>天然元素与简约设计，连接自然能量</p>
+                        <div class="product-price">¥88</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 品牌故事 -->
+    <section class="story">
+        <div class="container">
+            <div class="story-content">
+                <div class="story-text">
+                    <h2>我们的品牌故事</h2>
+                    <p>CalmCube诞生于2025年，源于创始人对于现代生活中宁静时刻的珍视。我们相信，珠宝不仅是外在的装饰，更是内心情感的寄托。</p>
+                    <p>品牌名称"CalmCube"融合了"宁静"与"立方体"的概念，立方体象征着结构、秩序和无限可能，而宁静则是我们希望通过产品传递的核心情感。</p>
+                    <p>每一件CalmCube珠宝都经过精心设计，融合极简美学与精良工艺，旨在为佩戴者带来内心的平静与自信。</p>
+                    <a href="#" class="btn">了解更多</a>
+                </div>
+                <div class="story-image">
+                     <img src="CalmCubeLogo.png"alt="CalmCube Logo" class="logo-img" style="max-width: 600px; height: auto;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 博客部分 -->
+    <section class="blog">
+        <div class="container">
+            <div class="section-title">
+                <h2>最新博客</h2>
+                <p>了解珠宝知识、搭配技巧和品牌最新动态</p>
+            </div>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <div class="blog-img">
+                        <span>博客图片</span>
+                    </div>
+                    <div class="blog-info">
+                        <h3>极简珠宝的日常搭配指南</h3>
+                        <p>探索如何将简约设计的珠宝融入您的日常穿搭，展现独特品味...</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-img">
+                        <span>博客图片</span>
+                    </div>
+                    <div class="blog-info">
+                        <h3>珠宝材质保养全攻略</h3>
+                        <p>了解不同珠宝材质的特性及保养方法，让您的珠宝持久如新...</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-img">
+                        <span>博客图片</span>
+                    </div>
+                    <div class="blog-info">
+                        <h3>盲盒文化：惊喜与收藏的乐趣</h3>
+                        <p>探讨盲盒文化如何改变我们的消费习惯，以及其中的心理学原理...</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">品牌故事</a></li>
+                        <li><a href="#">团队介绍</a></li>
+                        <li><a href="#">社会责任</a></li>
+                        <li><a href="#">招聘信息</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>客户服务</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">配送信息</a></li>
+                        <li><a href="#">退换政策</a></li>
+                        <li><a href="#">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>购物指南</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">盲盒说明</a></li>
+                        <li><a href="#">尺寸指南</a></li>
+                        <li><a href="#">保养指南</a></li>
+                        <li><a href="#">礼品卡</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>关注我们</h3>
+                    <p>订阅我们的通讯，获取最新产品和优惠信息</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-xiaohongshu"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 CalmCube 珠宝盲盒品牌. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Font Awesome 图标库 -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // 移动端下拉菜单切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            if (window.innerWidth <= 768) {
+                dropdowns.forEach(dropdown => {
+                    const link = dropdown.querySelector('a');
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdown.classList.toggle('active');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
